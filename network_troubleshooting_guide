@@ -1,0 +1,172 @@
+# **Network Troubleshooting Guide**
+
+This guide provides a systematic approach to identifying and resolving common network connectivity issues. It is tailored for IT support professionals to quickly diagnose and fix problems using efficient tools and techniques.
+
+---
+
+## **Common Network Issues**
+1. **No Internet Connection**: Devices cannot access the internet.
+2. **Slow Network Speeds**: Network performance is below expectations.
+3. **IP Address Conflicts**: Multiple devices using the same IP.
+4. **DNS Resolution Failures**: Unable to resolve domain names to IP addresses.
+5. **Intermittent Connectivity**: Connection drops frequently.
+
+---
+
+## **Step-by-Step Troubleshooting Process**
+
+### 1. **Verify Physical Connections**
+- Check cables and ensure they are securely connected.
+- Ensure the device is connected to the correct network (Wi-Fi or Ethernet).
+- Restart routers, modems, or switches if necessary.
+
+---
+
+### 2. **Check IP Configuration**
+#### Windows:
+- Open Command Prompt and run:
+  ```bash
+  ipconfig
+  ```
+  Verify:
+  - IP address
+  - Subnet mask
+  - Default gateway
+
+#### macOS/Linux:
+- Open Terminal and run:
+  ```bash
+  ifconfig
+  ```
+  or
+  ```bash
+  ip a
+  ```
+  Confirm similar details as above.
+
+#### Fix:
+- If no IP address is assigned:
+  ```bash
+  sudo dhclient
+  ```
+  (Linux) or use the **Renew DHCP Lease** option in network settings.
+
+---
+
+### 3. **Test Network Connectivity**
+#### Ping the Gateway:
+- Run:
+  ```bash
+  ping <default_gateway_ip>
+  ```
+  (e.g., `ping 192.168.1.1`).
+  - Success indicates local connectivity.
+
+#### Ping a Public Server:
+- Run:
+  ```bash
+  ping 8.8.8.8
+  ```
+  - Success indicates internet connectivity.
+
+---
+
+### 4. **DNS Resolution**
+#### Test DNS Functionality:
+- Run:
+  ```bash
+  nslookup google.com
+  ```
+  or
+  ```bash
+  dig google.com
+  ```
+  - Failure indicates DNS issues.
+
+#### Fix:
+- Change to a public DNS server (e.g., Google DNS):
+  ```bash
+  8.8.8.8
+  8.8.4.4
+  ```
+
+---
+
+### 5. **Identify Network Congestion**
+#### Bandwidth Monitoring:
+- Use tools like `speedtest-cli`:
+  ```bash
+  speedtest-cli
+  ```
+- Check router for devices consuming excessive bandwidth.
+
+#### Fix:
+- Limit bandwidth for non-critical devices.
+- Upgrade network infrastructure if necessary.
+
+---
+
+### 6. **Advanced Troubleshooting**
+#### Check Network Routes:
+- Run:
+  ```bash
+  traceroute google.com
+  ```
+  (Linux/macOS) or
+  ```bash
+  tracert google.com
+  ```
+  (Windows).
+  - Look for bottlenecks or packet drops.
+
+#### Analyze Traffic with Wireshark:
+- Use Wireshark to capture and analyze packets for detailed diagnostics.
+
+---
+
+## **Automated Troubleshooting Script**
+### Example Bash Script
+Save the following script as `network_check.sh`:
+```bash
+#!/bin/bash
+
+echo "Starting network diagnostics..."
+
+# Check IP Configuration
+echo "Checking IP configuration..."
+ip a || ifconfig
+
+# Ping Gateway
+echo "Pinging default gateway..."
+ping -c 4 192.168.1.1
+
+# Ping Public Server
+echo "Pinging Google DNS..."
+ping -c 4 8.8.8.8
+
+# Test DNS Resolution
+echo "Testing DNS resolution..."
+nslookup google.com || dig google.com
+
+echo "Network diagnostics completed."
+```
+Run with:
+```bash
+bash network_check.sh
+```
+
+---
+
+## **Best Practices**
+- Document the steps taken and solutions applied for future reference.
+- Regularly update router and network device firmware.
+- Use reliable hardware and maintain backup internet connections.
+
+---
+
+## **Common Tools**
+- **Ping**: Test connectivity to a host.
+- **Traceroute/Tracert**: Identify routing paths and bottlenecks.
+- **Nslookup/Dig**: Test DNS resolution.
+- **Wireshark**: Analyze network traffic.
+- **Speedtest-cli**: Test internet speed.
