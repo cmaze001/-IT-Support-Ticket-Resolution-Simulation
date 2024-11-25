@@ -1,3 +1,7 @@
+
+### **File: software_installation_support.py**
+
+```python
 import os
 import subprocess
 import sys
@@ -7,85 +11,111 @@ def check_package_installed(package_name):
     print(f"Checking if {package_name} is installed...")
     try:
         result = subprocess.run(
-            ["dpkg", "-l", package_name],
+            ["dpkg", "-s", package_name],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
         if result.returncode == 0:
-            print(f"{package_name} is already installed.")
+            print(f"✔ {package_name} is installed.")
             return True
         else:
-            print(f"{package_name} is not installed.")
+            print(f"✖ {package_name} is not installed.")
             return False
     except Exception as e:
-        print(f"Error while checking for {package_name}: {e}")
+        print(f"Error checking package: {e}")
         return False
 
 def install_package(package_name):
-    """Install a package using apt."""
-    print(f"\nAttempting to install {package_name}...")
+    """Install a package using the apt package manager."""
+    print(f"Installing {package_name}...")
     try:
-        subprocess.run(
-            ["sudo", "apt", "update"],
-            check=True
-        )
-        subprocess.run(
-            ["sudo", "apt", "install", "-y", package_name],
-            check=True
-        )
-        print(f"{package_name} has been successfully installed.")
+        subprocess.run(["sudo", "apt", "update"], check=True)
+        subprocess.run(["sudo", "apt", "install", "-y", package_name], check=True)
+        print(f"✔ {package_name} installed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"Failed to install {package_name}: {e}")
+        print(f"Error installing {package_name}: {e}")
     except Exception as e:
-        print(f"An unexpected error occurred during installation: {e}")
+        print(f"Unexpected error: {e}")
 
 def upgrade_package(package_name):
     """Upgrade a package to the latest version."""
-    print(f"\nAttempting to upgrade {package_name}...")
+    print(f"Upgrading {package_name}...")
     try:
-        subprocess.run(
-            ["sudo", "apt", "update"],
-            check=True
-        )
-        subprocess.run(
-            ["sudo", "apt", "install", "--only-upgrade", "-y", package_name],
-            check=True
-        )
-        print(f"{package_name} has been successfully upgraded.")
+        subprocess.run(["sudo", "apt", "update"], check=True)
+        subprocess.run(["sudo", "apt", "install", "--only-upgrade", "-y", package_name], check=True)
+        print(f"✔ {package_name} upgraded successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"Failed to upgrade {package_name}: {e}")
+        print(f"Error upgrading {package_name}: {e}")
     except Exception as e:
-        print(f"An unexpected error occurred during upgrade: {e}")
+        print(f"Unexpected error: {e}")
 
 def main():
-    print("Software Installation and Support Tool")
-    print("--------------------------------------")
-
-    if not os.geteuid() == 0:
-        print("This script must be run as root. Please rerun using sudo.")
+    """Main function to handle user interaction and package management."""
+    if os.geteuid() != 0:
+        print("⚠ This script must be run with administrative privileges. Please use sudo.")
         sys.exit(1)
 
-    package_name = input("\nEnter the name of the package you want to check/install/upgrade: ")
+    print("=== Software Installation Support Tool ===")
+    package_name = input("Enter the name of the package to check/install/upgrade: ").strip()
 
-    # Step 1: Check if the package is installed
-    is_installed = check_package_installed(package_name)
-
-    # Step 2: Provide options based on package status
-    if is_installed:
-        print(f"\n{package_name} is already installed.")
-        action = input("Would you like to upgrade it to the latest version? (yes/no): ").strip().lower()
+    # Check if the package is installed
+    if check_package_installed(package_name):
+        action = input(f"Would you like to upgrade {package_name}? (yes/no): ").strip().lower()
         if action == "yes":
             upgrade_package(package_name)
         else:
-            print(f"No further action required for {package_name}.")
+            print(f"No action taken for {package_name}.")
     else:
         action = input(f"{package_name} is not installed. Would you like to install it? (yes/no): ").strip().lower()
         if action == "yes":
             install_package(package_name)
         else:
-            print(f"{package_name} installation skipped.")
+            print(f"No action taken for {package_name}.")
 
-    print("\nScript execution complete.")
+    print("=== Script Execution Complete ===")
 
 if __name__ == "__main__":
     main()
+```
+
+---
+
+### **How to Use the Script**
+1. Save the script as `software_installation_support.py`.
+2. Open a terminal in the script's directory.
+3. Run the script with administrative privileges:
+   ```bash
+   sudo python3 software_installation_support.py
+   ```
+4. Follow the prompts to check, install, or upgrade the specified software.
+
+---
+
+### **Features**
+- **Checks for Installed Software**: Verifies if the software is already installed using `dpkg`.
+- **Installs Missing Software**: Uses `apt` to install packages not currently on the system.
+- **Upgrades Existing Software**: Updates installed packages to their latest versions.
+- **User-Friendly Interface**: Includes clear prompts and messages for user interaction.
+
+---
+
+### **Example Output**
+```plaintext
+=== Software Installation Support Tool ===
+Enter the name of the package to check/install/upgrade: curl
+Checking if curl is installed...
+✔ curl is installed.
+Would you like to upgrade curl? (yes/no): yes
+Upgrading curl...
+✔ curl upgraded successfully.
+=== Script Execution Complete ===
+```
+
+---
+
+### **Purpose**
+This script demonstrates essential automation and IT support skills by:
+- Automating package management tasks.
+- Improving efficiency in software troubleshooting.
+- Showcasing command-line and Python scripting expertise.
+
