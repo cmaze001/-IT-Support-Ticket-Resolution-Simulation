@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Network Diagnostic Script
+# This script performs basic network diagnostics to help troubleshoot connectivity issues.
+
+# Function to display a header
+echo_header() {
+  echo "=============================================="
+  echo "$1"
+  echo "=============================================="
+}
+
+# Check if the system can ping a known server
+echo_header "Step 1: Checking Internet Connectivity (Ping)"
+PING_TARGET="google.com"
+echo "Pinging $PING_TARGET..."
+ping -c 4 $PING_TARGET
+if [ $? -eq 0 ]; then
+  echo "Ping to $PING_TARGET was successful. Internet connectivity is working."
+else
+  echo "Ping to $PING_TARGET failed. There may be an issue with the internet connection."
+fi
+
+# Display current IP configuration
+echo_header "Step 2: Displaying Network Configuration"
+if command -v ifconfig &> /dev/null; then
+  ifconfig
+elif command -v ip &> /dev/null; then
+  ip addr show
+else
+  echo "No suitable command (ifconfig or ip) found to display network configuration."
+fi
+
+# Check DNS resolution
+echo_header "Step 3: Checking DNS Resolution"
+DNS_TEST="www.example.com"
+echo "Resolving $DNS_TEST..."
+nslookup $DNS_TEST 2>/dev/null || dig $DNS_TEST +short || {
+  echo "DNS resolution failed. Please check your DNS settings.";
+}
+
+# Test default gateway connectivity
+echo_header "Step 4: Testing Gateway Connectivity"
+DEFAULT_GATEWAY=$(ip route | grep default | awk '{print $3}')
+if [ -n "$DEFAULT_GATEWAY" ]; then
+  echo "Pinging default gateway ($DEFAULT_GATEWAY)..."
+  ping -c 4 $DEFAULT_GATEWAY
+  if [ $? -eq 0 ]; then
+    echo "Default gateway is reachable."
+  else
+    echo "Default gateway is not reachable. Check your router or network settings."
+  fi
+else
+  echo "No default gateway found. Please verify your network configuration."
+fi
+
+# Check open ports on localhost
+echo_header "Step 5: Checking Open Ports"
+if command -v netstat &> /dev/null; then
+  netstat -tuln
+elif command -v ss &> /dev/null; then
+  ss -tuln
+else
+  echo "No suitable command (netstat or ss) found to check open ports."
+fi
+
+# Final recommendations
+echo_header "Diagnostics Completed"
+echo "If issues persist, please check your network hardware, cables, and ISP connectivity."
