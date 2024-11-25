@@ -1,3 +1,4 @@
+
 import os
 import platform
 import subprocess
@@ -83,3 +84,20 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+### **How to Use the Script**
+1. Save this script as `network_connectivity_troubleshooting.py`.
+2. Run it using Python:
+   ```bash
+   python network_connectivity_troubleshooting.py
+   ```
+3. Follow the prompts and review the output to diagnose network issues.
+
+### **Key Features**
+- Checks the operating system for compatibility.
+- Displays IP configuration.
+- Tests internet connectivity using `ping` to a public DNS server.
+- Verifies DNS resolution for a common website.
+- Pings the default gateway to test local network connectivity.
+
