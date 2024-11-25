@@ -1,3 +1,5 @@
+
+
 import subprocess
 import platform
 
@@ -87,8 +89,30 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
 
+---
 
+### **How to Use the Script**
+1. Save the script as `printer_troubleshooting.py`.
+2. Run the script in your terminal or command prompt:
+   ```bash
+   python3 printer_troubleshooting.py
+   ```
+3. Follow the interactive prompts to diagnose and resolve printer issues.
+
+---
+
+### **Features**
+- **Check Printer Connection**: Validates if the printer is recognized by the system.
+- **Check Printer Drivers**: Lists available drivers or guides on how to validate them.
+- **Clear Print Queue**: Resolves stuck or jammed print jobs by clearing the queue.
+- **Cross-Platform Support**: Works on Windows, Linux, and macOS with platform-specific commands.
+
+---
+
+### **Example Output**
+```plaintext
 === Printer Troubleshooting Tool ===
 
 Options:
@@ -109,3 +133,12 @@ Options:
 Select an option (1-4): 3
 Clearing print queue...
 ✔ Print queue cleared successfully.
+```
+
+---
+
+### **Purpose**
+This script is an example of automating common printer troubleshooting tasks, demonstrating:
+- **IT Support Skills**: Diagnosing and resolving hardware-related issues.
+- **Python Automation**: Utilizing platform-specific commands for system management.
+- **Cross-Platform Compatibility**: Adapting solutions for different operating systems.
